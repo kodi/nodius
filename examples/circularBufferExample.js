@@ -1,5 +1,5 @@
-require.paths.unshift(__dirname+'/lib/');
-var logger = require('sys').log;
+require.paths.unshift(__dirname+'/../lib/');
+
 var echo = require('sys').puts;
 var CircularBuffer = require('CircularBuffer').CircularBuffer;
 var b = new CircularBuffer(4);
@@ -10,4 +10,17 @@ b.push("c");
 b.push("d");
 b.push("e");
 
-b.each
+b.getEach(function(element){
+    echo(element);    
+});
+
+/*
+OUTPUT:
+
+$>  node circularBufferExample.js
+e
+d
+c
+b
+$>
+ */
