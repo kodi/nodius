@@ -1,0 +1,3 @@
+[submodule "lib/node-snmp"]
+	path = lib/node-snmp
+	url = git@github.com:kodi/node-snmp.git
