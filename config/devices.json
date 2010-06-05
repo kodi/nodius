@@ -1,0 +1,12 @@
+{
+    hosts: [{
+        name: "localhost",
+        group: "",
+        pollInterval:"300s",
+        address: "127.0.0.1",
+        resources: [{method: "system.loadAvg", params: [] },
+                    {method: "system.getTCPConnections", params: [] },
+                    {method: "system.getFreeDiskSpace", params: [{partition:"/dev/disk0s2"}] },
+                    {method: "network.pingRemoteHost", params: [{remoteHostAddress: "google.com" }]}]
+   }]
+}
