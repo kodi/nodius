@@ -1,10 +1,10 @@
-require.paths.unshift(__dirname + '/lib/');
+require.paths.unshift(__dirname );
 var sys = require('sys');
 var fs = require('fs');
 var logger = sys.log;
 var echo = sys.puts;
 spawn = require('child_process').spawn;
-var CircularBuffer = require('CircularBuffer').CircularBuffer;
+var CircularBuffer = require('lib/CircularBuffer').CircularBuffer;
 
 try {
     var devicesJSON = fs.readFileSync(__dirname + "/config/devices.json", encoding = 'utf8');
@@ -13,89 +13,58 @@ try {
 }
 
 var NODIUS = {};
+NODIUS.Collectors = require('lib/Collectors').Collectors;
+NODIUS.App = {};
+NODIUS.Storage ={};
 NODIUS.Config = {};
 NODIUS.Config.devices = JSON.parse(devicesJSON);
 
-NODIUS.App = {};
+
 NODIUS.App.dispatcher = function(host) {
+    //logger("getting data for host: " + host.name);
+    NODIUS.App.getResources(host);
+};
 
-    logger("getting data for host: " + host.name);
-    NODIUS.App.getResources(host.resources);
-
-}
-
-
-NODIUS.App.getResources = function(resources) {
-    for (var i = 0; i < resources.length; i++) {
-        var resource = resources[i];
-        NODIUS.App.readValue(resource.method, resource.params, function(response) {
-
-            logger("got response: " + response);
-
+NODIUS.App.getResources = function(host) {
+    // init buffers container if empty
+    NODIUS.Storage.buffers = NODIUS.Storage.buffers || {};
+    for (var i = 0; i < host.resources.length; i++) {
+        var resource = host.resources[i];
+        // init new buffer
+        var group = (host.group =='')? '' : host.group+'.';
+        var bufferName = group+host.name+'.'+resource.method;
+        NODIUS.Storage.buffers[bufferName] = NODIUS.Storage.buffers[bufferName] || new CircularBuffer(resource.size);
+        var buffer = NODIUS.Storage.buffers[bufferName];
+        NODIUS.App.readValue(resource.method, resource.params,buffer, function(response) {
+            // additional response handling here
         });
-
     }
-}
+};
 
 
-NODIUS.App.readValue = function(method, params, callback) {
+NODIUS.App.readValue = function(method, params, buffer, callback) {
     var methods = method.split(".");
-    NODIUS.Collectors[methods[0]][methods[1]].get(params, callback);
-
-}
+    NODIUS.Collectors[methods[0]][methods[1]].get(params, buffer, callback);
+};
 
 NODIUS.App.collect = function(host) {
     setInterval(function() {
         NODIUS.App.dispatcher(host);
     }, host.pollInterval * 1000)
-}
-
-
-NODIUS.Collectors = {
-    "network" : {
-        "pingRemoteHost" :{
-            "get" : function(params, callback){
-               var ping    = spawn('ping', ['-c 4', '-q',params.remoteHostAddress,]);
-                this.data = '';
-                var self = this;
-                ping.stdout.addListener('data', function (data) {
-                    self.data +=data;
-                });
-
-                ping.stdout.addListener('end', function () {
-                    var a = self.data;
-                    self.data = '';
-                    callback(a);
-
-                });
-            }
-        }
-    },
-    "system":{
-
-        "getFreeDiskSpace":{
-            "get":function(params, callback){
-                callback('get getFreeDiskSpace');
-            }
-        },
-
-        "getTCPConnections":{
-            "get":function(params, callback){
-                callback('get getTCPConnections');
-            }
-        },
-
-        "loadAvg":{
-            "get":function(params, callback){
-                callback('get loadAvg');
-            }
-        }
-
-    }
 };
-
 
 for (var i = 0; i < NODIUS.Config.devices.hosts.length; i++) {
     var host = NODIUS.Config.devices.hosts[i];
     NODIUS.App.collect(host);
 }
+
+setInterval(function() {
+
+    for(var i in NODIUS.Storage.buffers){
+        var buffer = NODIUS.Storage.buffers[i];
+        echo("BUFFER ::::::"+i);
+        buffer.getEach(function(element){
+            echo("element :" +sys.inspect(element));
+        });
+    }
+}, 5 * 1000);

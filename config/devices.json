@@ -1,11 +1,13 @@
 {"hosts":[{
         "name": "localhost",
-        "group": "",
-        "pollInterval":10,
+        "group": "local",
+        "pollInterval":5,
         "address": "127.0.0.1",
-        "resources": [{"method": "system.loadAvg", "params": {} },
-                    {"method": "system.getTCPConnections", "params": {} },
-                    {"method": "system.getFreeDiskSpace", "params": {"partition":"/dev/disk0s2"} },
-                    {"method": "network.pingRemoteHost", "params": {"remoteHostAddress": "www.google.com" }}]
+        "resources": [
+            {"method": "system.loadAvg",             "type":"object",    "size":100, "params": {} }
+            ,{"method": "system.getTCPConnections",  "type":"int",       "size":100, "params": {} }
+            ,{"method": "system.getFreeDiskSpace",   "type":"float",     "size":100, "params": {"partition":"/dev/disk0s2"} }
+            ,{"method": "network.pingRemoteHost",    "type":"object",    "size":100, "params": {"remoteHostAddress": "www.google.com" }}
+        ]
    }]
 }
