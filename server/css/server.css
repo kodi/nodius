@@ -1,0 +1,51 @@
+*,body, html{
+    margin:0px;
+    padding:0px;
+    text-align:left;
+    font:normal 12px "Helvetica Neue", Arial, sans-serif;
+}
+
+body{
+    text-align:left;
+}
+
+pre{
+    font:normal 12px "Andale Mono", monospace;
+}
+
+h1{
+    font-size:24px;
+}
+
+h3{
+    font-size:18px;
+}
+
+
+pre ul li{
+    font:normal 12px "Andale Mono", monospace;
+}
+
+pre h3{
+    font:bold 12px "Andale Mono", monospace;
+}
+
+pre ul {
+    list-style:none;
+}
+
+#container{
+    text-align:left;
+    width:100%;
+}
+
+
+.padder{
+    padding:10px;     
+ }
+
+
+#header{
+    border-bottom:solid 1px #eee;
+    margin:0 0 24px 0;
+}

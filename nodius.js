@@ -1,4 +1,5 @@
 require.paths.unshift(__dirname );
+global.projectPath = __dirname;
 var sys = require('sys');
 var fs = require('fs');
 var logger = sys.log;
@@ -16,6 +17,8 @@ var NODIUS = {};
 NODIUS.Collectors = require('lib/Collectors').Collectors;
 NODIUS.App = {};
 NODIUS.Storage ={};
+global.NODIUS ={};
+global.NODIUS.Storage = NODIUS.Storage;
 NODIUS.Config = {};
 NODIUS.Config.devices = JSON.parse(devicesJSON);
 
@@ -35,6 +38,7 @@ NODIUS.App.getResources = function(host) {
         var bufferName = group+host.name+'.'+resource.method;
         NODIUS.Storage.buffers[bufferName] = NODIUS.Storage.buffers[bufferName] || new CircularBuffer(resource.size);
         var buffer = NODIUS.Storage.buffers[bufferName];
+        global.NODIUS.Storage.buffers = NODIUS.Storage.buffers;
         NODIUS.App.readValue(resource.method, resource.params,buffer, function(response) {
             // additional response handling here
         });
@@ -62,9 +66,11 @@ setInterval(function() {
 
     for(var i in NODIUS.Storage.buffers){
         var buffer = NODIUS.Storage.buffers[i];
-        echo("BUFFER ::::::"+i);
+        //  echo("BUFFER ::::::"+i);
         buffer.getEach(function(element){
-            echo("element :" +sys.inspect(element));
+            //echo("element :" +sys.inspect(element));
         });
     }
 }, 5 * 1000);
+
+var server = require('server/Server');
