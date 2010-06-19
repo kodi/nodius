@@ -1,0 +1,43 @@
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="/server/css/server.css">
+    <script type="text/javascript" src="/server/js/prototype.js"></script>
+    <script type="text/javascript" src="/server/js/StrokeText.js"></script>
+    <script type="text/javascript" src="/server/js/Visuals.js"></script>
+    <script type="text/javascript" src="/server/js/ChartEngine.js"></script>
+    <script type="text/javascript" src="/server/js/nodius.js"></script>
+
+    <script type="text/javascript">
+        window.onload = function(){
+            NODIUS.Engine.init();
+            NODIUS.Engine.run();
+
+            
+        }
+    </script>
+</head>
+<body>
+<div id="container">
+    <div class="padder">
+        <div id="header">
+            <h1>Nodius </h1>
+            <h3 style="color:#818181;">monitoring tool</h3>
+        </div>
+        <div id="content">
+            <div style="position:relative;">
+                <div style="position:absolute;z-index:20;top:20px;left:200px;">Ping (www.google.com)</div>
+
+                <canvas id="c1" width="550" height="200"></canvas>
+            </div>
+            <div style="position:relative;">
+                <div style="position:absolute;z-index:20;top:20px;left:200px;">Number of TCP Connections</div>
+                <canvas id="c2" width="550" height="200"></canvas>
+            </div>    
+        </div>
+        <div id="debug" style="display:none;">
+            <pre>{=debug}</pre>
+        </div>
+    </div>
+</div>
+</body>
+</html>		

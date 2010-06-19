@@ -36,7 +36,7 @@ NODIUS.App.getResources = function(host) {
         // init new buffer
         var group = (host.group =='')? '' : host.group+'.';
         var bufferName = group+host.name+'.'+resource.method;
-        NODIUS.Storage.buffers[bufferName] = NODIUS.Storage.buffers[bufferName] || new CircularBuffer(resource.size);
+        NODIUS.Storage.buffers[bufferName] = NODIUS.Storage.buffers[bufferName] || new CircularBuffer(resource.size,resource.params);
         var buffer = NODIUS.Storage.buffers[bufferName];
         global.NODIUS.Storage.buffers = NODIUS.Storage.buffers;
         NODIUS.App.readValue(resource.method, resource.params,buffer, function(response) {

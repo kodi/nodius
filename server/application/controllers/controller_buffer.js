@@ -6,16 +6,17 @@ var buffer = function() {
     }
 
     this.get = function(p) {
-        var self = this;
         var bufferName = p.query.name;
 
         if (typeof(global.NODIUS.Storage.buffers)!='undefined'  && typeof(global.NODIUS.Storage.buffers[bufferName]) != 'undefined' ) {
 
             var buffer = global.NODIUS.Storage.buffers[bufferName] ;
 
-            var output = [];
+            var output = {};
+            output.metaData = buffer.getMetaData();
+            output.values=[];
             buffer.getEach(function(element) {
-                output.push(element);
+                output.values.push(element);
             });
 
             var bufferJSON = JSON.stringify(output);
@@ -25,15 +26,31 @@ var buffer = function() {
             bufferJSON = '[]';
        }
 
+       return this.render(bufferJSON);
+
+    }
+
+
+    this.render=function(json){
+        var self = this;        
         headers = [
             [ "Content-Type"   , "application/json" ],
-            [ "Content-Length" , bufferJSON.length]
+            [ "Content-Length" , json.length]
         ];
 
         self.response.writeHead(200, headers);
-        self.response.write(bufferJSON);
+        self.response.write(json);
         self.response.end();
-        sys.puts(bufferName);
+    }
+
+    this.list = function(){
+        var output ={};
+        output.values = [];
+        for(var i in global.NODIUS.Storage.buffers){
+            output.values.push({"value":i});        
+        }
+
+        return this.render(JSON.stringify(output));
     }
 };
 
