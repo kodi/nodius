@@ -16,4 +16,4 @@ var Request = function() {
     }
 }
 
-exports.Request = new Request();
+exports.Request =  Request;

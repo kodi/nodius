@@ -2,13 +2,14 @@ require.paths.unshift(__dirname);
 
 var sys = require('sys'),
     http = require('http'),
-    requestModule = require('lib/Request'),
+    requestModule = require('lib/Request').Request,
     frontController = require('lib/FrontController').FrontController;
 
 http.createServer(function (request, response) {
 
   // parse request
-  var requestObject = requestModule.Request.parseRequest(request);
+  var req = new requestModule();  
+  var requestObject = req.parseRequest(request);
 
   // pass the response
   var fc = new frontController();
@@ -16,7 +17,6 @@ http.createServer(function (request, response) {
 
   // execute
   fc.execute(requestObject);
-
 
 }).listen(8000);
 

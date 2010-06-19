@@ -6,31 +6,66 @@ NODIUS.Engine = function() {
         drawChart:function(){
             var self = this;
 
-            NODIUS.Core.AJAXGetJSON('/buffer/get/?name=local.localhost.network.pingRemoteHost', function(data){
-                var output = []
-                data.values.each(function(val){
-                    output.push(val.value.avg);    
+            new Ajax.Request('/buffer/get/?name=local.localhost.network.pingRemoteHost', {
+                method: 'get',
+                onSuccess: function(transport) {
+                    var data = transport.responseText.evalJSON();
+                    var output = [];
+                    data.values.each(function(val){
+                        output.push(val.value.avg);
 
-                });
-
+                    });
                 self.pingChart.options.chartData = output;
-                self.pingChart.clearDrawingArea();
-                self.pingChart.drawChart();
-
+                self.pingChart.resetAndRedraw();
+                }
             });
 
-             NODIUS.Core.AJAXGetJSON('/buffer/get/?name=local.localhost.system.getTCPConnections', function(data){
-                var output = []
-                data.values.each(function(val){
-                    output.push(val.value);
+            new Ajax.Request('/buffer/get/?name=local.localhost.system.getTCPConnections', {
+                method: 'get',
+                onSuccess: function(transport) {
+                    var data = transport.responseText.evalJSON();
+                    var output = [];
+                    data.values.each(function(val){
+                        output.push(val.value);
 
-                });
+                    });
 
                 self.tcpChart.options.chartData = output;
-                self.pingChart.resetGraph();
-                self.tcpChart.drawChart();
+                self.tcpChart.resetAndRedraw();
+                }
+            });
+
+
+            /*
+            NODIUS.Core.AJAXGetJSON('/buffer/get/?name=local.localhost.network.pingRemoteHost', function(data){
+
+                var outputv = []
+                data.values.each(function(val){
+                    outputv.push(val.value.avg);
+
+                });
+
+                self.pingChart.options.chartData = outputv;
+                self.pingChart.resetAndRedraw();
 
             });
+
+            
+            NODIUS.Core.AJAXGetJSON('/buffer/get/?name=local.localhost.system.getTCPConnections', function(data){
+                
+                var outputv = []
+                data.values.each(function(val){
+                    outputv.push(val.value);
+
+                });
+
+                self.tcpChart.options.chartData = outputv;
+                self.tcpChart.resetAndRedraw();
+
+            });*/
+
+
+             
         },
 
         run : function(){
@@ -38,7 +73,7 @@ NODIUS.Engine = function() {
             var timeoutFunc = function () {
                 self.run();
             };
-            this.timeout = setTimeout(timeoutFunc, 1500);
+            this.timeout = setTimeout(timeoutFunc, 1000);
             this.drawChart();
         },
 
@@ -77,7 +112,7 @@ NODIUS.Core = function() {
         AJAXGetJSON:function(url, callback) {
             new Ajax.Request(url, {
                 method: 'get',
-                onSuccess: function(transport) {
+                onSuccess: function(transport, callback) {
                     var data = transport.responseJSON;
                     callback(data);
                 }
