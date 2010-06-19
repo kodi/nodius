@@ -14,7 +14,7 @@ NODIUS.Engine = function() {
                 });
 
                 self.pingChart.options.chartData = output;
-                self.pingChart.resetAndRedraw();
+                self.pingChart.drawChart();
 
             });
 
@@ -26,7 +26,7 @@ NODIUS.Engine = function() {
                 });
 
                 self.tcpChart.options.chartData = output;
-                self.tcpChart.resetAndRedraw();
+                self.tcpChart.drawChart();
 
             });
         },
