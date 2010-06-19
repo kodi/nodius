@@ -1,2 +1,5 @@
-1) start with: node nodius.js
-2) point your browser to: http://localhost:8000/
+1) git clone http://github.com/kodi/nodius.git
+2) cd nodius
+3) git submodule init
+4) start with: node nodius.js
+5) point your browser to: http://localhost:8000/
