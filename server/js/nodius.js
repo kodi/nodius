@@ -14,6 +14,7 @@ NODIUS.Engine = function() {
                 });
 
                 self.pingChart.options.chartData = output;
+                self.pingChart.clearDrawingArea();
                 self.pingChart.drawChart();
 
             });
@@ -26,6 +27,7 @@ NODIUS.Engine = function() {
                 });
 
                 self.tcpChart.options.chartData = output;
+                self.pingChart.resetGraph();
                 self.tcpChart.drawChart();
 
             });
@@ -36,7 +38,7 @@ NODIUS.Engine = function() {
             var timeoutFunc = function () {
                 self.run();
             };
-            this.timeout = setTimeout(timeoutFunc, 1000);
+            this.timeout = setTimeout(timeoutFunc, 1500);
             this.drawChart();
         },
 
