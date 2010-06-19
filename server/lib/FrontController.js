@@ -7,7 +7,6 @@ var path = require('path');
 var FrontController = function() {
     this.fr = {};
     this.execute = function(requestObject) {
-        //sys.inspect(requestObject.parsedRequest);
         var self = this;
         var url = requestObject.request.url;
         var fileName = global.projectPath + requestObject.request.url;
@@ -16,7 +15,7 @@ var FrontController = function() {
                 if (exists && url !== '/') {
                     self.serveStaticFile(fileName);
                 } else {
-                    sys.puts("executing action " + fileName);
+                    //sys.puts("executing action " + fileName);
                     // pass the request object to the main controller
                     // so all other controllers can have access to it
                     self.mainController.request = requestObject;
