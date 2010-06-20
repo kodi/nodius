@@ -21,28 +21,28 @@ var ChartEngine = Class.create({
 
         // DEFAULTS
         //this.options.numResults   = this.options.chartData.length;
-        this.chartPadding       = 10;
-        this.leftPadding        = 26.5;
-        this.rightPadding       = 50.5;
-        this.bottomPadding      = 30.5;
-        this.topPadding         = 26;
-        this.axisColor          = '#cacaca';
-        this.axisOpacity        = 1;
-        this.paddingFactor      = 0.00;
-        this.drawMinMaxLines    = false;
-        this.forceScope         = false;
-        this.forceMaxValue      = 0;
-        this.forceMinValue      = 0;
-        this.scatterChunkSize   = 1000;
-        this.updated            = false;
-        this.firstPass          = false;
-        this.prevElement        = false;
-        this.drawScatterGrid    = false;
-        this.hashGridSize       = 8;
-        this.hashGrid           = {};
-        this.dotMaxRadius       = 25;
-        this.dotMinRadius       = 3;
-        this.dotRadius          = 4;
+        this.chartPadding = 10;
+        this.leftPadding = 26.5;
+        this.rightPadding = 50.5;
+        this.bottomPadding = 30.5;
+        this.topPadding = 26;
+        this.axisColor = '#cacaca';
+        this.axisOpacity = 1;
+        this.paddingFactor = 0.00;
+        this.drawMinMaxLines = false;
+        this.forceScope = false;
+        this.forceMaxValue = 0;
+        this.forceMinValue = 0;
+        this.scatterChunkSize = 1000;
+        this.updated = false;
+        this.firstPass = false;
+        this.prevElement = false;
+        this.drawScatterGrid = false;
+        this.hashGridSize = 8;
+        this.hashGrid = {};
+        this.dotMaxRadius = 25;
+        this.dotMinRadius = 3;
+        this.dotRadius = 4;
         // init canvas
         this.canvas = new Visuals(options.canvasID);
         this.canvasWidth = this.canvas.containerWidth;
@@ -91,10 +91,10 @@ var ChartEngine = Class.create({
 
     resetGraph:function() {
         this.canvas.reload();
-        this.canvasWidth    = this.canvas.canvasElement.getWidth();
-        this.canvasHeight   = this.canvas.canvasElement.getHeight();
-        this.xAxis         = new xAxis(this);
-        this.yAxis         = new yAxis(this);
+        this.canvasWidth = this.canvas.canvasElement.getWidth();
+        this.canvasHeight = this.canvas.canvasElement.getHeight();
+        this.xAxis = new xAxis(this);
+        this.yAxis = new yAxis(this);
 
         this.drawAxes();
     },
@@ -120,7 +120,7 @@ var ChartEngine = Class.create({
     },
 
     prepareGraph: function () {
-        var chartOk=false;
+        var chartOk = false;
         if (typeof(this.options.type) != 'undefined') {
             this.xAxis = new xAxis(this);
             this.yAxis = new yAxis(this);
@@ -217,7 +217,7 @@ var ChartEngine = Class.create({
 
     drawScatterGraph: function () {
         var self = this;
-        this.scatterColor=this.options.color;
+        this.scatterColor = this.options.color;
 
         this.hashGrid = {};
         this.options.apiXMax = parseFloat(this.options.apiXMax);
@@ -244,14 +244,14 @@ var ChartEngine = Class.create({
         this.xMinScaled = this.scaleX(this.options.apiXMin);
 
 
-         if(this.drawScatterGrid){
-            for(var i=this.xMinScaled ; i < this.xMaxScaled; i+=this.hashGridSize){
-                this.canvas.line(i+0.5,this.yMinScaled,i+0.5,this.yMaxScaled,'#515151',0.1);
+        if (this.drawScatterGrid) {
+            for (var i = this.xMinScaled; i < this.xMaxScaled; i += this.hashGridSize) {
+                this.canvas.line(i + 0.5, this.yMinScaled, i + 0.5, this.yMaxScaled, '#515151', 0.1);
             }
-            for(var j=this.yMaxScaled ; j < this.yMinScaled; j+=this.hashGridSize){
-                this.canvas.line(this.xMinScaled,j+0.5,this.xMaxScaled,j+0.5,'#515151',0.1);
+            for (var j = this.yMaxScaled; j < this.yMinScaled; j += this.hashGridSize) {
+                this.canvas.line(this.xMinScaled, j + 0.5, this.xMaxScaled, j + 0.5, '#515151', 0.1);
             }
-         }
+        }
 
 
         // X AXIS
@@ -284,10 +284,10 @@ var ChartEngine = Class.create({
         this.canvas.text(avgYScaled.toString(), this.xMaxScaled + 1, avgYScaled - 5, 8, '#ff6600', 0.4);
 
         // Z VALUES
-        if(typeof(this.options.scatterFields[2]) != 'undefined'){
+        if (typeof(this.options.scatterFields[2]) != 'undefined') {
             console.log(typeof(this.options.scatterFields[2]))
-            this.options.apiZMin=this.getScatterMinValue(2);
-            this.options.apiZMax=this.getScatterMaxValue(2);
+            this.options.apiZMin = this.getScatterMinValue(2);
+            this.options.apiZMax = this.getScatterMaxValue(2);
             this.drawZLegend();
 
         }
@@ -317,11 +317,11 @@ var ChartEngine = Class.create({
 
             var xScaled = this.scaleX(em[0]);
             var yScaled = this.scaleY(em[1]);
-            var dotRadius=self.getScatterDotRadius(em);
+            var dotRadius = self.getScatterDotRadius(em);
             self.assignToGrid(xScaled, yScaled, self.options.keys[i]);
             //draw dots
 
-            self.canvas.circle(xScaled+0.5, yScaled+0.5, dotRadius, true, self.scatterColor, self.scatterColor, 0.45,0);
+            self.canvas.circle(xScaled + 0.5, yScaled + 0.5, dotRadius, true, self.scatterColor, self.scatterColor, 0.45, 0);
         }
 
         if ((size) < this.options.numResults) {
@@ -337,68 +337,68 @@ var ChartEngine = Class.create({
         this.setScatterListeners();
     },
 
-    getScatterDotRadius:function(element){
+    getScatterDotRadius:function(element) {
 
-        var x=this.dotRadius;
+        var x = this.dotRadius;
 
-        if(typeof(element[2]) !== 'undefined'){
+        if (typeof(element[2]) !== 'undefined') {
 
-            x = this.scaleToRange(element[2],this.options.apiZMin, this.options.apiZMax, this.dotMinRadius, this.dotMaxRadius);
+            x = this.scaleToRange(element[2], this.options.apiZMin, this.options.apiZMax, this.dotMinRadius, this.dotMaxRadius);
         }
         return x;
     },
 
-    drawZLegend:function(){
-        var data=this.options.chartDataRaw._object[this.options.scatterFields[2]];
+    drawZLegend:function() {
+        var data = this.options.chartDataRaw._object[this.options.scatterFields[2]];
 
 
-        var zMin=[0,0,Math.round(parseFloat(data.min)*100,2)/100];
-        var zMax=[0,0,Math.round(parseFloat(data.max)*100,2)/100];
-        var zAvg=[0,0,Math.round(parseFloat(data.average)*100,2)/100];
-        var zMed=[0,0,Math.round(parseFloat(data.median)*100,2)/100];
+        var zMin = [0,0,Math.round(parseFloat(data.min) * 100, 2) / 100];
+        var zMax = [0,0,Math.round(parseFloat(data.max) * 100, 2) / 100];
+        var zAvg = [0,0,Math.round(parseFloat(data.average) * 100, 2) / 100];
+        var zMed = [0,0,Math.round(parseFloat(data.median) * 100, 2) / 100];
 
-        var h=0;
-        var pcx=0
-        var ptx=0;
-        var radius  = this.getScatterDotRadius(zMax);
-        var centerX = this.xMaxScaled-radius;
+        var h = 0;
+        var pcx = 0
+        var ptx = 0;
+        var radius = this.getScatterDotRadius(zMax);
+        var centerX = this.xMaxScaled - radius;
         var centerY = this.yMaxScaled + radius;
-        this.canvas.circle(centerX, centerY, radius, true, this.scatterColor, '000000', 0.2,0);
-        this.canvas.text(zMax[2].toString(), centerX + radius+5, centerY-5, 8, '#676767', 0.8);
-        h+=radius;
-        pcx=centerX;
-        ptx=centerX + radius+5;
-        this.assignToGrid(centerX, centerY,'Max: '+zMax[2].toString())
+        this.canvas.circle(centerX, centerY, radius, true, this.scatterColor, '000000', 0.2, 0);
+        this.canvas.text(zMax[2].toString(), centerX + radius + 5, centerY - 5, 8, '#676767', 0.8);
+        h += radius;
+        pcx = centerX;
+        ptx = centerX + radius + 5;
+        this.assignToGrid(centerX, centerY, 'Max: ' + zMax[2].toString())
 
-        radius  = this.getScatterDotRadius(zAvg);
+        radius = this.getScatterDotRadius(zAvg);
         centerX = pcx;
-        centerY = this.yMaxScaled + radius +(h*2)+5;
-        this.canvas.circle(centerX, centerY, radius, true, 'ff6600', '000000', 0.2,0);
-        this.canvas.text(zAvg[2].toString(), ptx, centerY-5, 8, '#676767', 0.8);
-        h+=radius+5;
-        this.assignToGrid(centerX, centerY,'Average: '+zAvg[2].toString())
+        centerY = this.yMaxScaled + radius + (h * 2) + 5;
+        this.canvas.circle(centerX, centerY, radius, true, 'ff6600', '000000', 0.2, 0);
+        this.canvas.text(zAvg[2].toString(), ptx, centerY - 5, 8, '#676767', 0.8);
+        h += radius + 5;
+        this.assignToGrid(centerX, centerY, 'Average: ' + zAvg[2].toString())
 
 
-        radius  = this.getScatterDotRadius(zMed);
+        radius = this.getScatterDotRadius(zMed);
         centerX = pcx;
-        centerY = this.yMaxScaled + radius +(h*2)+5;
-        this.canvas.circle(centerX, centerY, radius, true, 'acacff', '000000', 0.2,0);
-        this.canvas.text(zMed[2].toString(), ptx, centerY-5, 8, '#676767', 0.8);
-        h+=radius+5;
-        this.assignToGrid(centerX, centerY,'Median: '+zMed[2].toString())
+        centerY = this.yMaxScaled + radius + (h * 2) + 5;
+        this.canvas.circle(centerX, centerY, radius, true, 'acacff', '000000', 0.2, 0);
+        this.canvas.text(zMed[2].toString(), ptx, centerY - 5, 8, '#676767', 0.8);
+        h += radius + 5;
+        this.assignToGrid(centerX, centerY, 'Median: ' + zMed[2].toString())
 
-        radius  = this.getScatterDotRadius(zMin);
+        radius = this.getScatterDotRadius(zMin);
         centerX = pcx;
-        centerY = this.yMaxScaled + radius +(h*2)+5;
-        this.canvas.circle(centerX, centerY, radius, true, this.scatterColor, '000000', 0.2,0);
-        this.canvas.text(zMin[2].toString(), ptx, centerY-5, 8, '#676767', 0.8);
-        h+=radius+5;
-        this.assignToGrid(centerX, centerY,'Min: '+zMin[2].toString())
+        centerY = this.yMaxScaled + radius + (h * 2) + 5;
+        this.canvas.circle(centerX, centerY, radius, true, this.scatterColor, '000000', 0.2, 0);
+        this.canvas.text(zMin[2].toString(), ptx, centerY - 5, 8, '#676767', 0.8);
+        h += radius + 5;
+        this.assignToGrid(centerX, centerY, 'Min: ' + zMin[2].toString())
 
-           console.log(zMin, zMax, zMed, zAvg, radius);
+        console.log(zMin, zMax, zMed, zAvg, radius);
     },
 
-    scaleToRange:function(oldValue, oldMin, oldMax, newMin, newMax){
+    scaleToRange:function(oldValue, oldMin, oldMax, newMin, newMax) {
         var x = (((oldValue - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin);
         return x;
     },
@@ -468,20 +468,20 @@ var ChartEngine = Class.create({
 
         var xMinTitle = '';
         var xMaxTitle = '';
-        if(typeof(this.options.timestamps) != 'undefined'){
+        if (typeof(this.options.timestamps) != 'undefined') {
             this.options.timestamps = this.options.timestamps.reverse(false);
 
             var date = new Date();
             //start time
             date.setTime(this.options.timestamps[0]);
-            xMinTitle = date.getHours() + ":"+date.getMinutes();
+            xMinTitle = this.pad(date.getHours()) + ":" + this.pad(date.getMinutes());
 
             //end time
-            date.setTime(this.options.timestamps[this.options.timestamps.length -1]);
-            xMaxTitle = date.getHours() + ":"+date.getMinutes();
-        }else{
+            date.setTime(this.options.timestamps[this.options.timestamps.length - 1]);
+            xMaxTitle = this.pad(date.getHours()) + ":" + this.pad(date.getMinutes());
+        } else {
             xMinTitle = this.xMin;
-            xMaxTitle = this.xMax;    
+            xMaxTitle = this.xMax;
         }
 
         // X AXIS
@@ -561,7 +561,7 @@ var ChartEngine = Class.create({
 
         var barWidth = (xMaxScaled - xMinScaled - 2) / this.options.chartData.length;
         if (barWidth < 1) {
-            barWidth =1;
+            barWidth = 1;
         }
 
         if (barWidth >= 2) {
@@ -594,7 +594,7 @@ var ChartEngine = Class.create({
 
     drawComplexHistogram:function(mouseX, mouseY) {
         var self = this;
-        this.complexHistogramMouseY=mouseY;
+        this.complexHistogramMouseY = mouseY;
         var x = 0;
         var y = 0;
         var yZero = this.scaleY(self.yMin) - 1;
@@ -880,6 +880,10 @@ var ChartEngine = Class.create({
 
     dbg: function () {
         console.log(this);
+    },
+
+    pad:function(n){
+            return n<10 ? '0'+n : n;
     }
 });
 
@@ -912,7 +916,7 @@ var xAxis = Class.create(ChartEngine, {
             this.chart.canvas.line(xScaled, y, xScaled, this.chart.topPadding, color, alpha);
         }
         var textWidth = get_textWidth(h.toString(), 8);
-        this.chart.canvas.text(text.toString(), xScaled - (textWidth / 2), this.chart.canvasHeight - 16, 8, color, alpha);
+        this.chart.canvas.text(text.toString(), xScaled - (textWidth / 2) -6, this.chart.canvasHeight - 16, 8, color, alpha);
     }
 });
 

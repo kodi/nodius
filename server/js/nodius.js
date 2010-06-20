@@ -103,3 +103,13 @@ NODIUS.Core = function() {
         }
     }
 }();
+
+
+NODIUS.Util = function(){
+    return{
+        pad:function(n){
+            return n<10 ? '0'+n : n;
+        }
+
+    }
+}();
