@@ -466,10 +466,28 @@ var ChartEngine = Class.create({
         this.availableCanvasWidth = this.scaleX(this.xMax) - this.scaleX(this.xMin);
         this.drawMinMaxLines = false;
 
+        var xMinTitle = '';
+        var xMaxTitle = '';
+        if(typeof(this.options.timestamps) != 'undefined'){
+            this.options.timestamps = this.options.timestamps.reverse(false);
+
+            var date = new Date();
+            //start time
+            date.setTime(this.options.timestamps[0]);
+            xMinTitle = date.getHours() + ":"+date.getMinutes();
+
+            //end time
+            date.setTime(this.options.timestamps[this.options.timestamps.length -1]);
+            xMaxTitle = date.getHours() + ":"+date.getMinutes();
+        }else{
+            xMinTitle = this.xMin;
+            xMaxTitle = this.xMax;    
+        }
+
         // X AXIS
         this.xAxis.printTitle(this.options.xTitle);
-        this.xAxis.drawLine(this.xMax, 'text', '6767cc', 0.4);
-        this.xAxis.drawLine(this.xMin, 'text', '6767cc', 0.4);
+        this.xAxis.drawLine(this.xMax, xMaxTitle, '6767cc', 0.4);
+        this.xAxis.drawLine(this.xMin, xMinTitle, '6767cc', 0.4);
 
 
         // Y AXIS
@@ -534,7 +552,7 @@ var ChartEngine = Class.create({
 
     drawBars:function() {
         var self = this;
-
+        this.options.chartData = this.options.chartData.reverse(false);
         var x = 0;
         var y = 0;
         var yZero = this.scaleY(self.yMin);
@@ -894,7 +912,7 @@ var xAxis = Class.create(ChartEngine, {
             this.chart.canvas.line(xScaled, y, xScaled, this.chart.topPadding, color, alpha);
         }
         var textWidth = get_textWidth(h.toString(), 8);
-        this.chart.canvas.text(h.toString(), xScaled - (textWidth / 2), this.chart.canvasHeight - 16, 8, color, alpha);
+        this.chart.canvas.text(text.toString(), xScaled - (textWidth / 2), this.chart.canvasHeight - 16, 8, color, alpha);
     }
 });
 

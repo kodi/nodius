@@ -5,67 +5,28 @@ NODIUS.Engine = function() {
     return{
         drawChart:function(){
             var self = this;
-
-            new Ajax.Request('/buffer/get/?name=local.localhost.network.pingRemoteHost', {
-                method: 'get',
-                onSuccess: function(transport) {
-                    var data = transport.responseText.evalJSON();
-                    var output = [];
-                    data.values.each(function(val){
-                        output.push(val.value.avg);
-
-                    });
-                self.pingChart.options.chartData = output;
-                self.pingChart.resetAndRedraw();
-                }
-            });
-
-            new Ajax.Request('/buffer/get/?name=local.localhost.system.getTCPConnections', {
-                method: 'get',
-                onSuccess: function(transport) {
-                    var data = transport.responseText.evalJSON();
-                    var output = [];
-                    data.values.each(function(val){
-                        output.push(val.value);
-
-                    });
-
-                self.tcpChart.options.chartData = output;
-                self.tcpChart.resetAndRedraw();
-                }
-            });
-
-
-            /*
             NODIUS.Core.AJAXGetJSON('/buffer/get/?name=local.localhost.network.pingRemoteHost', function(data){
 
-                var outputv = []
+                var outputv = [];
+                var timestamps = [];
                 data.values.each(function(val){
                     outputv.push(val.value.avg);
-
+                    timestamps.push(val.timestamp);
                 });
 
                 self.pingChart.options.chartData = outputv;
+                self.pingChart.options.timestamps = timestamps;
                 self.pingChart.resetAndRedraw();
 
             });
-
-            
             NODIUS.Core.AJAXGetJSON('/buffer/get/?name=local.localhost.system.getTCPConnections', function(data){
-                
-                var outputv = []
+                var output = [];
                 data.values.each(function(val){
-                    outputv.push(val.value);
-
+                    output.push(val.value);
                 });
-
-                self.tcpChart.options.chartData = outputv;
+                self.tcpChart.options.chartData = output;
                 self.tcpChart.resetAndRedraw();
-
-            });*/
-
-
-             
+            });
         },
 
         run : function(){
@@ -81,7 +42,7 @@ NODIUS.Engine = function() {
             this.pingChart = new ChartEngine({
                 'canvasID':'c1',
                 'tooltip':'tt',
-                'type':'line',
+                'type':'bars',
                 'color':'#acacff',
                 'lineWidth':1,
                 'xTitle':'time',
@@ -112,7 +73,7 @@ NODIUS.Core = function() {
         AJAXGetJSON:function(url, callback) {
             new Ajax.Request(url, {
                 method: 'get',
-                onSuccess: function(transport, callback) {
+                onSuccess: function(transport) {
                     var data = transport.responseJSON;
                     callback(data);
                 }
