@@ -561,10 +561,10 @@ var ChartEngine = Class.create({
 
         var barWidth = (xMaxScaled - xMinScaled - 2) / this.options.chartData.length;
         if (barWidth < 1) {
-            barWidth = 1;
+            barWidth =1;
         }
 
-        if (barWidth >= 3) {
+        if (barWidth >= 2) {
             barWidth -= 1.5;
         }
 

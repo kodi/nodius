@@ -47,6 +47,7 @@ var FrontController = function() {
 
     this.initializeController = function(requestObject) {
         try {
+            sys.puts(requestObject.request.url);
             var c = require('application/controllers/controller_' + requestObject.controller);
             var controller = c['controller_' + requestObject.controller];
             controller.prototype = this.mainController;
