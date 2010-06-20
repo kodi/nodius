@@ -21,10 +21,15 @@ NODIUS.Engine = function() {
             });
             NODIUS.Core.AJAXGetJSON('/buffer/get/?name=local.localhost.system.getTCPConnections', function(data){
                 var output = [];
+                var timestamps = [];
+
                 data.values.each(function(val){
                     output.push(val.value);
+                    timestamps.push(val.timestamp);
                 });
+
                 self.tcpChart.options.chartData = output;
+                self.tcpChart.options.timestamps = timestamps;
                 self.tcpChart.resetAndRedraw();
             });
         },

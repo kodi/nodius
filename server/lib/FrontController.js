@@ -54,8 +54,9 @@ var FrontController = function() {
             var cont = new controller();
             return cont;
         } catch(e) {
-            error.ErrorHandler.displayError('Invalid Controller: ' + requestObject.controller, this.mainController.response);
-
+            this.mainController.response.writeHead(200, {'Content-Type': 'text/plain'});
+            this.mainController.response.end('Error occured!\n' + error + ' \n');
+            return false;
         }
     };
 
