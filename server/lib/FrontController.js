@@ -70,7 +70,7 @@ var FrontController = function() {
             [ "Content-Type"   , content_type ]
             //,[ "Content-Length" , body.length]
         ];
-
+        sys.log("serving static file: "+filename);
         self.response.writeHead(200, headers);
         var file = fs.createReadStream(filename, {'flags': 'r', 'encoding':encoding, 'mode': 0666, 'bufferSize': 4 * 1024})
 
