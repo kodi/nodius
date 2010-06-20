@@ -7,12 +7,14 @@ var echo = sys.puts;
 spawn = require('child_process').spawn;
 var CircularBuffer = require('lib/CircularBuffer').CircularBuffer;
 
+//load config
 try {
     var devicesJSON = fs.readFileSync(__dirname + "/config/devices.json", encoding = 'utf8');
 } catch(e) {
     logger("File " + __dirname + "/config/devices.json not found.\nerror" + e);
 }
 
+//init objects and NODIUS namespace
 var NODIUS = {};
 NODIUS.Collectors = require('lib/Collectors').Collectors;
 NODIUS.App = {};
@@ -24,18 +26,23 @@ NODIUS.Config.devices = JSON.parse(devicesJSON);
 
 
 NODIUS.App.dispatcher = function(host) {
-    //logger("getting data for host: " + host.name);
+    //@todo add validation in dispatcher
     NODIUS.App.getResources(host);
 };
 
+//
+// get single resource
+// @param host JSON object
 NODIUS.App.getResources = function(host) {
     // init buffers container if empty
     NODIUS.Storage.buffers = NODIUS.Storage.buffers || {};
     for (var i = 0; i < host.resources.length; i++) {
+        
         var resource = host.resources[i];
-        // init new buffer
         var group = (host.group =='')? '' : host.group+'.';
         var bufferName = group+host.name+'.'+resource.method;
+
+        // fetch buffer of init new
         NODIUS.Storage.buffers[bufferName] = NODIUS.Storage.buffers[bufferName] || new CircularBuffer(resource.size,resource.params);
         var buffer = NODIUS.Storage.buffers[bufferName];
         global.NODIUS.Storage.buffers = NODIUS.Storage.buffers;
@@ -57,20 +64,11 @@ NODIUS.App.collect = function(host) {
     }, host.pollInterval * 1000)
 };
 
+//start collecting for all defined hosts
 for (var i = 0; i < NODIUS.Config.devices.hosts.length; i++) {
     var host = NODIUS.Config.devices.hosts[i];
     NODIUS.App.collect(host);
 }
 
-setInterval(function() {
-
-    for(var i in NODIUS.Storage.buffers){
-        var buffer = NODIUS.Storage.buffers[i];
-        //  echo("BUFFER ::::::"+i);
-        buffer.getEach(function(element){
-            //echo("element :" +sys.inspect(element));
-        });
-    }
-}, 5 * 1000);
-
+// start web interface
 var server = require('server/Server');
