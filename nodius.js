@@ -88,8 +88,11 @@ NODIUS.Storage.load = function() {
             var bufferName = file.replace('.json', '');
 
             NODIUS.Storage.buffers[bufferName] = new CircularBuffer(fileJsonString.len, fileJsonString.meta);
+            sys.puts(fileJsonString.values.length);
             for (var j = 0; j < fileJsonString.values.length; j ++) {
-                NODIUS.Storage.buffers[bufferName].push(fileJsonString.values[j]);
+                var value = fileJsonString.values[j];
+                sys.puts(sys.inspect(value));
+                NODIUS.Storage.buffers[bufferName].loadPush(value);
             }
             sys.log(" LOADING::: buffer :"+ bufferName +" loaded");
         }
