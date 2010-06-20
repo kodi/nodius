@@ -83,7 +83,6 @@ var FrontController = function() {
 
 
 
-            logger.log(req, {"responseCode" : responseCode, "size":stats.size});
 
             self.response.writeHead(responseCode, headers);
             var file = fs.createReadStream(filename, {'flags': 'r', 'encoding':encoding, 'mode': 0666, 'bufferSize': 4 * 1024})
@@ -105,7 +104,9 @@ var FrontController = function() {
             });
 
             file.addListener('end', function(data) {
-                //sys.puts('finished sending '+filename)
+                //log the request
+                logger.log(req, {"responseCode" : responseCode, "size":stats.size});
+                //close connection
                 self.response.end();
             });
 
