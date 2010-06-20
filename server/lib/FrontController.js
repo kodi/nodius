@@ -2,6 +2,7 @@ var sys = require('sys');
 var fs = require('fs');
 var error = require('lib/ErrorHandler');
 var template = require('lib/Template');
+var logger = require('lib/Logger').Logger;
 var path = require('path');
 
 var FrontController = function() {
@@ -13,7 +14,7 @@ var FrontController = function() {
         try {
             path.exists(fileName, function(exists) {
                 if (exists && url !== '/') {
-                    self.serveStaticFile(fileName);
+                    self.serveStaticFile(fileName, requestObject.request);
                 } else {
                     //sys.puts("executing action " + fileName);
                     // pass the request object to the main controller
@@ -47,48 +48,67 @@ var FrontController = function() {
 
     this.initializeController = function(requestObject) {
         try {
-            sys.puts(requestObject.request.url);
+
             var c = require('application/controllers/controller_' + requestObject.controller);
             var controller = c['controller_' + requestObject.controller];
             controller.prototype = this.mainController;
             var cont = new controller();
+            logger.log(requestObject.request);
             return cont;
         } catch(e) {
-            this.mainController.response.writeHead(200, {'Content-Type': 'text/plain'});
+            this.mainController.response.writeHead(404, {'Content-Type': 'text/plain'});
             this.mainController.response.end('Error occured!\n' + error + ' \n');
+            logger.log(requestObject.request);
             return false;
         }
+
+
     };
 
 
-    this.serveStaticFile = function(filename) {
+    this.serveStaticFile = function(filename, req) {
         var self = this;
-        var content_type = self.mime.getMime(filename);
-        var encoding = (content_type.slice(0, 4) === "text" ? "utf8" : "binary");
-
-        headers = [
-            [ "Content-Type"   , content_type ]
-            //,[ "Content-Length" , body.length]
-        ];
-        sys.log("serving static file: "+filename);
-        self.response.writeHead(200, headers);
-        var file = fs.createReadStream(filename, {'flags': 'r', 'encoding':encoding, 'mode': 0666, 'bufferSize': 4 * 1024})
 
 
-        file.addListener('data', function(data) {
-            //sys.puts("chunk received "+filename);
-            try {
-                self.response.write(data, encoding);
-            } catch(e) {
+        fs.stat(filename, function(err, stats) {
+            var content_type = self.mime.getMime(filename);
+            var encoding = (content_type.slice(0, 4) === "text" ? "utf8" : "binary");
+
+            // generate file headers
+            var responseCode = 200;
+            headers = [
+                [ "Content-Type"   , content_type ],
+                [ "Content-Length" , stats.size]
+            ];
+
+
+
+            logger.log(req, {"responseCode" : responseCode, "size":stats.size});
+
+            self.response.writeHead(responseCode, headers);
+            var file = fs.createReadStream(filename, {'flags': 'r', 'encoding':encoding, 'mode': 0666, 'bufferSize': 4 * 1024})
+
+
+            file.addListener('data', function(data) {
+                //sys.puts("chunk received "+filename);
+                try {
+                    self.response.write(data, encoding);
+                } catch(e) {
+                    self.response.end();
+                    sys.puts("ERROR @ filename:" + filename + "\n" + e);
+                }
+            });
+
+            file.addListener('error', function(data) {
+
+
+            });
+
+            file.addListener('end', function(data) {
+                //sys.puts('finished sending '+filename)
                 self.response.end();
-                sys.puts("ERROR @ filename:" + filename + "\n" + e);
+            });
 
-            }
-        });
-
-        file.addListener('end', function(data) {
-            //sys.puts('finished sending '+filename)
-            self.response.end();
         });
     };
 
