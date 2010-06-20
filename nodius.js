@@ -65,27 +65,37 @@ NODIUS.Storage.persist = function() {
         elements = elements.reverse(false);
         var diskObject = {"len":buffer._len,"meta":meta, "values":elements };
 
-        fs.writeFile(__dirname + '/data/buffers/' + bufferName+'.json', JSON.stringify(diskObject), function(err) {
-            if(err){
-                sys.log("EROOR SAVING BUFFER "+ bufferName);
-            }else{
-                    
+        fs.writeFile(__dirname + '/data/buffers/' + bufferName + '.json', JSON.stringify(diskObject), function(err) {
+            if (err) {
+                sys.log("EROOR SAVING BUFFER " + bufferName);
+            } else {
+
             }
         });
     }
 };
 
-NODIUS.Storage.load = function(){
-    var files = fs.readDirSync(__dirname + '/data/buffers');
-    for(var i = 0; i < files.length; i++){
-        var file = files[i];
-        var fileContent = fs.readFileSync(__dirname + '/data/buffers/'+file, encoding = 'utf8');
-        var json = JSON.parse(fileContent);
-        var bufferName = file.replace('.json','');
-        NODIUS.Storage.buffers[bufferName] = new CircularBuffer(json.len,json.meta);
-        for(var j = 0; i < json.values.length; j ++ ){
-            NODIUS.Storage.buffers[bufferName].push(json.values[j]);
+NODIUS.Storage.load = function() {
+    NODIUS.Storage.buffers = NODIUS.Storage.buffers || {};
+    var files = fs.readdirSync(__dirname + '/data/buffers');
+    try {
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var fileName = __dirname + '/data/buffers/' + file;
+            var stats = fs.statSync(fileName);
+            var fileContent = fs.readFileSync(fileName, encoding = 'utf8');
+            var fileJsonString = JSON.parse(fileContent);
+            var bufferName = file.replace('.json', '');
+
+            NODIUS.Storage.buffers[bufferName] = new CircularBuffer(fileJsonString.len, fileJsonString.meta);
+            for (var j = 0; j < fileJsonString.values.length; j ++) {
+                NODIUS.Storage.buffers[bufferName].push(fileJsonString.values[j]);
+            }
+            sys.log(" LOADING::: buffer :"+ bufferName +" loaded");
         }
+
+    } catch(e) {
+        sys.log("ERROR OCCURED: " + e.stack);
     }
 };
 
@@ -100,10 +110,6 @@ NODIUS.App.collect = function(host) {
     }, host.pollInterval * 1000)
 };
 
-
-
-
-
 // Load existing buffers from disk
 NODIUS.Storage.load();
 
@@ -117,5 +123,5 @@ for (var i = 0; i < NODIUS.Config.devices.hosts.length; i++) {
 var server = require('server/Server');
 
 setInterval(function() {
-    //NODIUS.Storage.persist();
+    NODIUS.Storage.persist();
 }, (10 * 1000));
