@@ -1,7 +1,7 @@
 {"hosts":[{
         "name": "localhost",
         "group": "local",
-        "pollInterval":1,
+        "pollInterval":5,
         "address": "127.0.0.1",
         "resources": [
             {"method": "system.loadAvg",             "type":"object",    "size":251, "params": {} }
