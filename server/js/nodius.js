@@ -33,7 +33,9 @@ NODIUS.Engine = function() {
                 self.tcpChart.resetAndRedraw();
             });
         },
-
+        /**
+         * run  
+         */
         run : function(){
             var self = this;
             var timeoutFunc = function () {
@@ -42,7 +44,9 @@ NODIUS.Engine = function() {
             this.timeout = setTimeout(timeoutFunc, 2000);
             this.drawChart();
         },
-
+        /**
+         *  init function
+         */
         init:function(){
             this.pingChart = new ChartEngine({
                 'canvasID':'c1',
@@ -109,7 +113,9 @@ NODIUS.Core = function() {
     }
 }();
 
-
+/**
+ *  util class
+ */
 NODIUS.Util = function(){
     return{
         pad:function(n){

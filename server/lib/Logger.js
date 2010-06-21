@@ -1,5 +1,14 @@
 var sys = require('sys');
+/**
+ * simple logger class
+ */
 var Logger = {
+    /**
+     *
+     *
+     * @param request   - http.request
+     * @param stats     - additional stats
+     */
     log:function(request, stats){
 
         var response = '';

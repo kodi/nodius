@@ -51,7 +51,7 @@ NODIUS.App.getResources = function(host) {
         });
     }
 };
-
+// take a snapshot of existing buffers to disk
 NODIUS.Storage.persist = function() {
     for (var i in NODIUS.Storage.buffers) {
         var bufferName = i;
@@ -74,17 +74,21 @@ NODIUS.Storage.persist = function() {
         });
     }
 };
-
+// load existing queues from disk
 NODIUS.Storage.load = function() {
     NODIUS.Storage.buffers = NODIUS.Storage.buffers || {};
+    //read existing queues from disk
     var files = fs.readdirSync(__dirname + '/data/buffers');
     try {
         for (var i = 0; i < files.length; i++) {
+            //read file
             var file = files[i];
             var fileName = __dirname + '/data/buffers/' + file;
             var stats = fs.statSync(fileName);
             var fileContent = fs.readFileSync(fileName, encoding = 'utf8');
+            //parse JSON
             var fileJsonString = JSON.parse(fileContent);
+            //generate buffer name
             var bufferName = file.replace('.json', '');
 
             NODIUS.Storage.buffers[bufferName] = new CircularBuffer(fileJsonString.len, fileJsonString.meta);
@@ -94,17 +98,26 @@ NODIUS.Storage.load = function() {
             }
             sys.log(" LOADING::: buffer :"+ bufferName +" loaded");
         }
-
     } catch(e) {
         sys.log("ERROR OCCURED: " + e.stack);
     }
 };
+/**
+ * 
+ * @param method    - collect method   
+ * @param params    - additional parms
+ * @param buffer    - which buffer to use
+ * @param callback  - callback function
+ */
 
 NODIUS.App.readValue = function(method, params, buffer, callback) {
     var methods = method.split(".");
     NODIUS.Collectors[methods[0]][methods[1]].get(params, buffer, callback);
 };
-
+/**
+ *  collect params for given host
+ * @param host - host object from config
+ */
 NODIUS.App.collect = function(host) {
     setInterval(function() {
         NODIUS.App.dispatcher(host);
@@ -122,7 +135,10 @@ for (var i = 0; i < NODIUS.Config.devices.hosts.length; i++) {
 
 // start web interface
 var server = require('server/Server');
-
+/**
+ * start job that takes snapshots of existing buffers and saves
+ * them to disk
+ */
 setInterval(function() {
     NODIUS.Storage.persist();
 }, (10 * 1000));

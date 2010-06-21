@@ -65,7 +65,11 @@ var FrontController = function() {
 
     };
 
-
+    /**
+     * serve static file handler
+     * @param filename
+     * @param req
+     */
     this.serveStaticFile = function(filename, req) {
         var self = this;
 
@@ -80,9 +84,6 @@ var FrontController = function() {
                 [ "Content-Type"   , content_type ],
                 [ "Content-Length" , stats.size]
             ];
-
-
-
 
             self.response.writeHead(responseCode, headers);
             var file = fs.createReadStream(filename, {'flags': 'r', 'encoding':encoding, 'mode': 0666, 'bufferSize': 4 * 1024})
@@ -99,8 +100,7 @@ var FrontController = function() {
             });
 
             file.addListener('error', function(data) {
-
-
+                //@todo handle error
             });
 
             file.addListener('end', function(data) {
@@ -298,7 +298,7 @@ var FrontController = function() {
     }
 };
 
-
+// controller clas that all other controllers extends
 var Controller = function(response) {
     this.response = response;
     this.template = template.Template;
