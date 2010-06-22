@@ -21,6 +21,13 @@ h3{
     font-size:18px;
 }
 
+h4{
+    font-size:16px;
+}
+
+h4{
+    font-size:14px;
+}
 
 pre ul li{
     font:normal 12px "Andale Mono", monospace;
@@ -48,4 +55,50 @@ pre ul {
 #header{
     border-bottom:solid 1px #eee;
     margin:0 0 24px 0;
+}
+
+#sidebar {
+    width:300px;
+    position:absolute;
+    top:60px;
+    right:10px;
+    padding:12px;
+    border-left:solid 1px #eee;
+}
+
+#sidebar h4{
+    border-bottom:solid 1px #eee;
+}
+
+#sidebar ul{
+    list-style:none;
+    margin:10px 0 0 0;
+}
+
+#sidebar ul li{
+    border-bottom:solid 1px #ddd;
+    border-top:solid 1px #ddd;
+    background:#f1f1f1;
+}
+
+#sidebar ul li h5{
+    padding:5px 0 5px 12px;
+
+}
+
+#sidebar ul ul li:hover{
+    background:#f1fff1;
+
+}
+
+#sidebar ul li ul{
+    margin:0;
+}
+
+#sidebar ul li ul li{
+    color:#515151;
+    background:#fff;
+    border-top:none;
+    padding:2px 2px 2px 24px;
+    border-bottom:solid 1px #f1f1f1;
 }

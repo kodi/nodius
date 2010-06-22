@@ -1,4 +1,5 @@
 var sys = require('sys');
+var fs = require('fs');
 var buffer = function() {
 
     this.index = function() {
@@ -44,13 +45,42 @@ var buffer = function() {
     }
 
     this.list = function(){
-        var output ={};
-        output.values = [];
-        for(var i in global.NODIUS.Storage.buffers){
-            output.values.push({"value":i});        
-        }
+        var self = this;
+        //generate list of hosts and resources to export
 
-        return this.render(JSON.stringify(output));
+        //start by reading config file
+        fs.readFile(__dirname + "/../../../config/devices.json", encoding='utf8',function(err, data){
+            if(!err){
+                var devices = JSON.parse(data);
+                var output = [];
+
+                for(var i = 0; i < devices.hosts.length; i++) {
+                    var host = devices.hosts[i];
+                    var resources = host.resources;
+                    var entry = {};
+                    entry.name = host.name;
+                    entry.group = host.group;
+                    entry.poolInterval = host.poolInterval;
+                    entry.resources = [];
+
+                    for(var j = 0; j < resources.length; j ++){
+                        var resource = resources[j];
+                        var bufferName = entry.group+'.'+entry.name+'.'+resource.method;
+                        if(typeof(global.NODIUS.Storage.buffers[bufferName]) != 'undefined'){
+                            entry.resources.push({"name":resource.method,"fullName": bufferName,"size":resource.size})
+                        }
+                    }
+
+                    output.push(entry);
+                }
+
+                return self.render(JSON.stringify(output));
+
+            }
+
+        });
+
+
     }
 };
 

@@ -32,6 +32,21 @@ NODIUS.Engine = function() {
                 self.tcpChart.options.timestamps = timestamps;
                 self.tcpChart.resetAndRedraw();
             });
+
+            NODIUS.Core.AJAXGetJSON('/buffer/get/?name=local.localhost.system.loadAvg', function(data){
+
+                var outputv = [];
+                var timestamps = [];
+                data.values.each(function(val){
+                    outputv.push(val.value.load1);
+                    timestamps.push(val.timestamp);
+                });
+
+                self.loadChart.options.chartData = outputv;
+                self.loadChart.options.timestamps = timestamps;
+                self.loadChart.resetAndRedraw();
+
+            });
         },
         /**
          * run  
@@ -71,7 +86,39 @@ NODIUS.Engine = function() {
                 'xTitle':'time',
                 'yTitle':'# conections'
             });
-            
+
+            this.loadChart = new ChartEngine({
+                'canvasID':'c3',
+                'tooltip':'tt',
+                'type':'line',
+                'color':'#acacff',
+                'lineWidth':1,
+                'xTitle':'time',
+                'yTitle':'load'
+            });
+
+            this.loadSidebar();   
+        },
+
+        loadSidebar:function(){
+             NODIUS.Core.AJAXGetJSON('/buffer/list/', function(data){
+                var HTML = '<ul>';
+                for(var i = 0; i < data.length; i++){
+                    var host = data[i];
+                    //get hostname
+                    HTML +='<li><h5>'+host.name+'</h5></li>';
+                    // sub-list of resources
+                    HTML +='<li><ul>';
+                    for(var j = 0; j < host.resources.length; j++){
+                        var resource = host.resources[j];
+                        HTML +='<li>'+resource.name+'</li>'
+                    }
+                    HTML +='</ul></li>';
+                }
+                HTML +='</ul>';
+
+                $('bufferList').innerHTML = HTML; 
+             });
         }
     }
 }();
