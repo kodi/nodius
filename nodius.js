@@ -11,8 +11,9 @@ var CircularBuffer = require('lib/CircularBuffer').CircularBuffer;
 //load config
 try {
     var devicesJSON = fs.readFileSync(__dirname + "/config/devices.json", encoding = 'utf8');
+    var appConfig   = fs.readFileSync(__dirname + "/config/config.json", encoding = 'utf8');
 } catch(e) {
-    logger("File " + __dirname + "/config/devices.json not found.\nerror" + e);
+    logger("File not found.\nerror :" + e);
 }
 
 //init objects and NODIUS namespace
@@ -24,6 +25,8 @@ global.NODIUS = {};
 global.NODIUS.Storage = NODIUS.Storage;
 NODIUS.Config = {};
 NODIUS.Config.devices = JSON.parse(devicesJSON);
+NODIUS.Config.appConfig = JSON.parse(appConfig);
+global.NODIUS.Config = NODIUS.Config;
 
 
 NODIUS.App.dispatcher = function(host) {
@@ -139,10 +142,12 @@ for (var i = 0; i < NODIUS.Config.devices.hosts.length; i++) {
 
 // start web interface
 var server = require('server/Server');
+
+
 /**
  * start job that takes snapshots of existing buffers and saves
  * them to disk
  */
 setInterval(function() {
     NODIUS.Storage.persist();
-}, (10 * 1000));
+}, (NODIUS.Config.appConfig.appSettings.snapshotInterval * 1000));

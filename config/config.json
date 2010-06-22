@@ -1,0 +1,7 @@
+{
+    "appSettings":{
+        "snapshotInterval" : 60,
+        "port":8000
+    }
+
+}

@@ -5,6 +5,8 @@ var sys = require('sys'),
     requestModule = require('lib/Request').Request,
     frontController = require('lib/FrontController').FrontController;
 
+var config = global.NODIUS.Config.appConfig;
+
 http.createServer(function (request, response) {
 
   // parse request
@@ -18,8 +20,8 @@ http.createServer(function (request, response) {
   // execute
   fc.execute(requestObject);
 
-}).listen(8000);
+}).listen(config.appSettings.port);
 
-sys.puts('Server running at http://127.0.0.1:8000/');
+sys.puts('Server running at http://127.0.0.1:'+config.appSettings.port+'/');
 
 exports.Server = {};
