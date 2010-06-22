@@ -163,6 +163,10 @@ var ChartEngine = Class.create({
             case 'line':
                 this.drawGenericGraph();
                 break;
+
+            case 'multiple-lines':
+                this.drawGenericMultiple();
+                break;
         }
     },
 
@@ -521,8 +525,121 @@ var ChartEngine = Class.create({
 
     },
 
-    drawLineGraph:function() {
+    drawGenericMultiple:function(){
+        
+        var data = this.options.chartData;
+        var firstEntry = this.options.chartData[0];
+        var self = this;
+        var fields = [];
 
+        this.yMaxArray = [];
+        this.yMinArray = [];
+        
+        for(var fieldName in firstEntry){
+            fields.push(fieldName);
+        }
+
+        self.options.chartData = [];
+        fields.each(function(field){
+            //console.log(field);
+            var tmpData = [];
+            data.each(function(entry){
+                tmpData.push(entry[field]);
+            });
+            self.yMaxArray.push(tmpData.max());
+            self.yMinArray.push(tmpData.min());
+            self.options.chartData.push({"name":field,"values": tmpData});
+
+
+        });
+        self.drawMultipleLineGraph();
+
+    },
+
+    drawMultipleLineGraph:function() {
+        //console.log(this.options.chartData);
+
+        this.xMin = 0;
+        this.xMax = this.options.chartData[0].values.length;
+
+        this.yMin = this.yMinArray.min();
+        this.yMax = this.yMaxArray.max();
+
+        this.getDataScope(true);
+
+        if (!this.hasNegative && (this.options.type == 'bars' || this.options.type == 'complexHistogram')) {
+            //we are drawing from the zero
+            this.yMin = 0;
+            this.yscope = this.yMax - this.yMin;
+        }
+
+        this.availableCanvasWidth = this.scaleX(this.xMax) - this.scaleX(this.xMin);
+        this.drawMinMaxLines = false;
+
+        var xMinTitle = '';
+        var xMaxTitle = '';
+        if (typeof(this.options.timestamps) != 'undefined') {
+            this.options.timestamps = this.options.timestamps.reverse(false);
+
+            var date = new Date();
+            //start time
+            date.setTime(this.options.timestamps[0]);
+            xMinTitle = this.pad(date.getHours()) + ":" + this.pad(date.getMinutes());
+
+            //end time
+            date.setTime(this.options.timestamps[this.options.timestamps.length - 1]);
+            xMaxTitle = this.pad(date.getHours()) + ":" + this.pad(date.getMinutes());
+        } else {
+            xMinTitle = this.xMin;
+            xMaxTitle = this.xMax;
+        }
+
+        // X AXIS
+        this.xAxis.printTitle(this.options.xTitle);
+        this.xAxis.drawLine(this.xMax, xMaxTitle, '6767cc', 0.4);
+        this.xAxis.drawLine(this.xMin, xMinTitle, '6767cc', 0.4);
+
+
+        // Y AXIS
+        this.yAxis.printTitle(this.options.yTitle);
+        this.yAxis.drawLine(this.yMax, 'max', '6767cc', 0.4);
+        this.yAxis.drawLine(this.yMin, 'min', '6767cc', 0.4);
+
+        //console.log("min max scope");
+        //console.log(this.xMin, this.xMax,this.yMin +' yMax: ' +this.yMax);
+       // console.log(this.xMin,this.xMax,this.yMin,this.yMax);
+        var self = this;
+        var len = this.options.chartData[0].values.length;
+
+        this.options.chartData.each(function(mData){
+            var data = mData.values.reverse(false);
+            var field = mData.name;
+            var x = 0;
+            var xNext = 0;
+            var y = 0;
+            var yNext = 0;
+
+            self.canvas.setLineWidth(self.options.lineWidth);
+
+            data.each(function(elm, index) {
+                if (index < len - 1) {
+                    x = self.scaleX(index) + 0.5;
+                    y = self.scaleY(elm);
+                    
+                    xNext = self.scaleX(index + 1) + 0.5;
+                    yNext = self.scaleY(data[index + 1]);
+
+                    self.canvas.line(x, y, xNext, yNext, self.options.color[field], 0.6);
+                }
+                
+            });
+
+        });
+
+    },
+
+
+    drawLineGraph:function() {
         var self = this;
         var len = this.options.chartData.length;
         var data = this.options.chartData.reverse(false);
@@ -634,8 +751,6 @@ var ChartEngine = Class.create({
                     barColor = self.options.hoverColor;
                 } else {
                     barColor = self.options.color;
-
-
                 }
             }
 
@@ -662,14 +777,15 @@ var ChartEngine = Class.create({
 
 
     // GET DATA SCOPE
-    getDataScope:function() {
-
-        // get min and max values
-        this.xMin = 0;
-        this.yMin = this.options.chartData.min();
-        this.xMax = this.options.chartData.length;
-        this.yMax = this.options.chartData.max();
-
+    getDataScope:function(multiple) {
+        if(typeof(multiple) == 'undefined'){
+            // get min and max values
+            this.xMin = 0;
+            this.yMin = this.options.chartData.min();
+            this.xMax = this.options.chartData.length;
+            this.yMax = this.options.chartData.max();
+        }
+        
         if (this.forceScope) {
             this.yMax = this.forceMaxValue;
             this.yMin = this.forceMinValue;

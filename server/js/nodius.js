@@ -38,7 +38,7 @@ NODIUS.Engine = function() {
                 var outputv = [];
                 var timestamps = [];
                 data.values.each(function(val){
-                    outputv.push(val.value.load1);
+                    outputv.push(val.value);
                     timestamps.push(val.timestamp);
                 });
 
@@ -90,8 +90,8 @@ NODIUS.Engine = function() {
             this.loadChart = new ChartEngine({
                 'canvasID':'c3',
                 'tooltip':'tt',
-                'type':'line',
-                'color':'#acacff',
+                'type':'multiple-lines',
+                'color':{'load1':'#acacff','load5':'#ffcc00','load15':'#880000'},
                 'lineWidth':1,
                 'xTitle':'time',
                 'yTitle':'load'
