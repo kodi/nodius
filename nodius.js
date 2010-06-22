@@ -4,6 +4,7 @@ var sys = require('sys');
 var fs = require('fs');
 var logger = sys.log;
 var echo = sys.puts;
+var path = require('path');
 spawn = require('child_process').spawn;
 var CircularBuffer = require('lib/CircularBuffer').CircularBuffer;
 
@@ -83,28 +84,31 @@ NODIUS.Storage.load = function() {
         for (var i = 0; i < files.length; i++) {
             //read file
             var file = files[i];
-            var fileName = __dirname + '/data/buffers/' + file;
-            var stats = fs.statSync(fileName);
-            var fileContent = fs.readFileSync(fileName, encoding = 'utf8');
-            //parse JSON
-            var fileJsonString = JSON.parse(fileContent);
-            //generate buffer name
-            var bufferName = file.replace('.json', '');
+            var extension = path.extname(file);
+            if (extension === '.json') {
+                var fileName = __dirname + '/data/buffers/' + file;
+                var stats = fs.statSync(fileName);
+                var fileContent = fs.readFileSync(fileName, encoding = 'utf8');
+                //parse JSON
+                var fileJsonString = JSON.parse(fileContent);
+                //generate buffer name
+                var bufferName = file.replace('.json', '');
 
-            NODIUS.Storage.buffers[bufferName] = new CircularBuffer(fileJsonString.len, fileJsonString.meta);
-            for (var j = 0; j < fileJsonString.values.length; j ++) {
-                var value = fileJsonString.values[j];
-                NODIUS.Storage.buffers[bufferName].loadPush(value);
+                NODIUS.Storage.buffers[bufferName] = new CircularBuffer(fileJsonString.len, fileJsonString.meta);
+                for (var j = 0; j < fileJsonString.values.length; j ++) {
+                    var value = fileJsonString.values[j];
+                    NODIUS.Storage.buffers[bufferName].loadPush(value);
+                }
+                sys.log(" LOADING::: buffer :" + bufferName + " loaded");
             }
-            sys.log(" LOADING::: buffer :"+ bufferName +" loaded");
         }
     } catch(e) {
         sys.log("ERROR OCCURED: " + e.stack);
     }
 };
 /**
- * 
- * @param method    - collect method   
+ *
+ * @param method    - collect method
  * @param params    - additional parms
  * @param buffer    - which buffer to use
  * @param callback  - callback function
