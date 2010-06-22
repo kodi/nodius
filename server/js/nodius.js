@@ -44,6 +44,10 @@ NODIUS.Engine = function() {
             this.timeout = setTimeout(timeoutFunc, 2000);
             this.drawChart();
         },
+
+        stop:function(){
+           clearTimeout(this.timeout); 
+        },
         /**
          *  init function
          */

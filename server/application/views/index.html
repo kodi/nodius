@@ -12,7 +12,10 @@
         window.onload = function(){
             NODIUS.Engine.init();
             NODIUS.Engine.run();
-        }
+        };
+        window.onbeforeunload = function() {
+            NODIUS.Engine.stop();
+        };
     </script>
 </head>
 <body>
