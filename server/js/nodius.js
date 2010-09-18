@@ -71,7 +71,7 @@ NODIUS.Engine = function() {
                 'canvasID':'c1',
                 'tooltip':'tt',
                 'type':'bars',
-                'color':'#acacff',
+                'color':'#aa4141',
                 'lineWidth':1,
                 'xTitle':'time',
                 'yTitle':'resonse (ms)'
@@ -81,7 +81,7 @@ NODIUS.Engine = function() {
                 'canvasID':'c2',
                 'tooltip':'tt',
                 'type':'line',
-                'color':'#acacff',
+                'color':'#aa4141',
                 'lineWidth':1,
                 'xTitle':'time',
                 'yTitle':'# conections'
