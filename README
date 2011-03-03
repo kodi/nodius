@@ -5,14 +5,3 @@
 5) mkdir data/buffers
 6) start with: node nodius.js
 7) point your browser to: http://localhost:8000/
-
-/web/node.js/nodius/lib/Utils.js:6
-        var values = lastLine.split("/");
-                              ^
-TypeError: Cannot call method 'split' of undefined
-    at Object.parsePingResponse (/web/node.js/nodius/lib/Utils.js:6:31)
-    at /web/node.js/nodius/lib/Collectors.js:20:47
-    at ChildProcess.<anonymous> (child_process:102:21)
-    at ChildProcess.emit (events:33:26)
-    at Stream.<anonymous> (child_process:130:12)
-    at Stream.emit (events:26:26)
