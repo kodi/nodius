@@ -1,4 +1,3 @@
-var sys = require('sys');
 var pack = require('./pack');
 var constants = require('./constants');
 var utils = require('./utils');

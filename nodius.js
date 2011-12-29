@@ -1,12 +1,11 @@
-require.paths.unshift(__dirname);
 global.projectPath = __dirname;
-var sys = require('sys');
+var util = require('util');
 var fs = require('fs');
-var logger = sys.log;
-var echo = sys.puts;
+var logger = util.log;
+var echo = util.puts;
 var path = require('path');
 spawn = require('child_process').spawn;
-var CircularBuffer = require('lib/CircularBuffer').CircularBuffer;
+var CircularBuffer = require('./lib/CircularBuffer').CircularBuffer;
 
 //load config
 try {
@@ -18,7 +17,7 @@ try {
 
 //init objects and NODIUS namespace
 var NODIUS = {};
-NODIUS.Collectors = require('lib/Collectors').Collectors;
+NODIUS.Collectors = require('./lib/Collectors').Collectors;
 NODIUS.App = {};
 NODIUS.Storage = {};
 global.NODIUS = {};
@@ -71,7 +70,7 @@ NODIUS.Storage.persist = function() {
 
         fs.writeFile(__dirname + '/data/buffers/' + bufferName + '.json', JSON.stringify(diskObject), function(err) {
             if (err) {
-                sys.log("EROOR SAVING BUFFER " + bufferName);
+                util.log("EROOR SAVING BUFFER " + bufferName);
             } else {
 
             }
@@ -102,11 +101,11 @@ NODIUS.Storage.load = function() {
                     var value = fileJsonString.values[j];
                     NODIUS.Storage.buffers[bufferName].loadPush(value);
                 }
-                sys.log(" LOADING::: buffer :" + bufferName + " loaded");
+                util.log(" LOADING::: buffer :" + bufferName + " loaded");
             }
         }
     } catch(e) {
-        sys.log("ERROR OCCURED: " + e.stack);
+        util.log("ERROR OCCURED: " + e.stack);
     }
 };
 /**
@@ -141,7 +140,7 @@ for (var i = 0; i < NODIUS.Config.devices.hosts.length; i++) {
 }
 
 // start web interface
-var server = require('server/Server');
+var server = require('./server/Server');
 
 
 /**

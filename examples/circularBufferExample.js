@@ -1,5 +1,5 @@
 require.paths.unshift(__dirname+'/../lib/');
-var sys = require('sys');
+var util = require('util');
 var echo = sys.puts;
 var CircularBuffer = require('CircularBuffer').CircularBuffer;
 var b = new CircularBuffer(4);
@@ -34,7 +34,7 @@ b1.push({a:3,b:"c"});
 b1.push({a:4,b:"d"});
 
 b1.getEach(function(element){
-    echo(sys.inspect(element));
+    echo(util.inspect(element));
 });
 
 

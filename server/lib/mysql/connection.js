@@ -1,7 +1,7 @@
 // RawConnection: 
 // MySQL packet I/O
 // http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol#The_Packet_Header
-var sys = require('sys');
+var util = require('util');
 var events = require("events");
 var pack = require('./pack');
 var utils = require('./utils');
@@ -20,7 +20,7 @@ var Connection = function(port, hostname) {
     this.socket = new Socket(utils.scope(this, function(){ this.emit("connect"); }),
 			     utils.scope(this, function(){ this.emit("close"); }));
 }
-sys.inherits(Connection, events.EventEmitter);
+util.inherits(Connection, events.EventEmitter);
 exports.Connection = Connection;
 
 // set timeout

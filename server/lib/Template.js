@@ -1,6 +1,5 @@
-var sys = require('sys');
 var fs = require('fs');
-var TEMPLATE = require("server/lib/normal-template");
+var TEMPLATE = require("./normal-template");
 var Template = function() {
 
     this.data = {};

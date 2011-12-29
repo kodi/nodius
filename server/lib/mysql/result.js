@@ -1,6 +1,6 @@
 // Result:
 // Result set
-var sys = require('sys');
+var util = require('util');
 var utils = require('./utils');
 
 // Result set
@@ -16,7 +16,7 @@ var Result = function(fields, protocol) {
     ResultBase.call(this, fields);
     this.protocol = protocol;
 }
-sys.inherits(Result, ResultBase);
+util.inherits(Result, ResultBase);
 exports.Result = Result;
 
 Result.prototype.fetch_all = function() {
@@ -46,7 +46,7 @@ var StatementResult = function(fields, protocol) {
     ResultBase.call(this, fields);
     this.protocol = protocol;
 }
-sys.inherits(StatementResult, ResultBase);
+util.inherits(StatementResult, ResultBase);
 exports.StatementResult = Result;
 
 

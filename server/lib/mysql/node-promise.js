@@ -7,7 +7,7 @@
 // Copyright 2009, 2010 Ryan Lienhart Dahl. All rights reserved.
 // MIT License
 
-var sys = require('sys');
+var util = require('util');
 var events = require('events');
 
 exports.Promise = function () {
@@ -16,7 +16,7 @@ exports.Promise = function () {
     this.hasFired = false;
     this._values = undefined;
 };
-sys.inherits(exports.Promise, events.EventEmitter);
+util.inherits(exports.Promise, events.EventEmitter);
 
 exports.Promise.prototype.timeout = function(timeout, createError) {
     if (!timeout) {

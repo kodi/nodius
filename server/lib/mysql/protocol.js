@@ -1,6 +1,6 @@
 // Protocol:
 // MySQL Protocol 
-var sys = require('sys');
+var util = require('util');
 var fs = require("fs");
 var events = require('events');
 var pack = require('./pack');
@@ -44,7 +44,7 @@ var Protocol = function(host, port) {
 
     this.conn.connect();
 }
-sys.inherits(Protocol, events.EventEmitter);
+util.inherits(Protocol, events.EventEmitter);
 exports.Protocol = Protocol;
 
 // close TCP session

@@ -3,7 +3,7 @@ node-mysql
 
 node-mysql is pure Javascript MySQL network driver for [node.js](http://nodejs.org/)
 */
-var sys = require('sys');
+var util = require('util');
 var events = require('events');
 var result = require('./mysql/result');
 var types = require('./mysql/types');
@@ -28,10 +28,10 @@ var Connection = function(hostname, username, password, dbname, port) {
     this.sqlstate = undefined;
     this._timeout = undefined;
     this.defaultErrback = function(error) {
-	sys.puts("MySQL error: "+error);
+	util.puts("MySQL error: "+error);
     }
 }
-sys.inherits(Connection, events.EventEmitter);
+util.inherits(Connection, events.EventEmitter);
 exports.Connection = Connection;
 
 Connection.prototype.connect = function(callback, errback) {
