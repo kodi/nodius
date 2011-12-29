@@ -1,8 +1,8 @@
-var sys = require('sys');
+var util = require('util');
 var fs = require('fs');
-var error = require('lib/ErrorHandler');
-var template = require('lib/Template');
-var logger = require('lib/Logger').Logger;
+var error = require('./ErrorHandler');
+var template = require('./Template');
+var logger = require('./Logger').Logger;
 var path = require('path');
 
 var FrontController = function() {
@@ -16,7 +16,7 @@ var FrontController = function() {
                 if (exists && url !== '/') {
                     self.serveStaticFile(fileName, requestObject.request);
                 } else {
-                    //sys.puts("executing action " + fileName);
+                    //util.puts("executing action " + fileName);
                     // pass the request object to the main controller
                     // so all other controllers can have access to it
                     self.mainController.request = requestObject;
@@ -49,7 +49,7 @@ var FrontController = function() {
     this.initializeController = function(requestObject) {
         try {
 
-            var c = require('application/controllers/controller_' + requestObject.controller);
+            var c = require('../application/controllers/controller_' + requestObject.controller);
             var controller = c['controller_' + requestObject.controller];
             controller.prototype = this.mainController;
             var cont = new controller();
@@ -57,7 +57,7 @@ var FrontController = function() {
             return cont;
         } catch(e) {
             this.mainController.response.writeHead(404, {'Content-Type': 'text/plain'});
-            this.mainController.response.end('Error occured!\n' + error + ' \n');
+            this.mainController.response.end('Error occured!\n' + e + ' \n');
             logger.log(requestObject.request);
             return false;
         }
@@ -90,12 +90,12 @@ var FrontController = function() {
 
 
             file.addListener('data', function(data) {
-                //sys.puts("chunk received "+filename);
+                //util.puts("chunk received "+filename);
                 try {
                     self.response.write(data, encoding);
                 } catch(e) {
                     self.response.end();
-                    sys.puts("ERROR @ filename:" + filename + "\n" + e);
+                    util.puts("ERROR @ filename:" + filename + "\n" + e);
                 }
             });
 

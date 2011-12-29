@@ -1,4 +1,3 @@
-var sys = require('sys');
 var fs = require('fs');
 var buffer = function() {
 

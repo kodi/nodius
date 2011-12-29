@@ -1,4 +1,4 @@
-var sys = require('sys');
+var util = require('util');
 /**
  * simple logger class
  */
@@ -19,7 +19,7 @@ var Logger = {
             response +="\t"+stats.responseCode;
             response +="\t"+stats.size;    
         }
-        sys.log(response);
+        util.log(response);
     }
 }
 exports.Logger = Logger;

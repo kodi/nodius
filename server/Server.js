@@ -1,9 +1,7 @@
-require.paths.unshift(__dirname);
-
-var sys = require('sys'),
+var util = require('util'),
     http = require('http'),
-    requestModule = require('lib/Request').Request,
-    frontController = require('lib/FrontController').FrontController;
+    requestModule = require('./lib/Request').Request,
+    frontController = require('./lib/FrontController').FrontController;
 
 var config = global.NODIUS.Config.appConfig;
 
@@ -22,6 +20,6 @@ http.createServer(function (request, response) {
 
 }).listen(config.appSettings.port);
 
-sys.puts('Server running at http://127.0.0.1:'+config.appSettings.port+'/');
+util.puts('Server running at http://127.0.0.1:'+config.appSettings.port+'/');
 
 exports.Server = {};
