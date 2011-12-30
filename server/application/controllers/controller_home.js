@@ -1,4 +1,3 @@
-var sys = require('sys');
 var home = function() {
 
     this.index = function() {

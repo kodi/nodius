@@ -1,7 +1,7 @@
 // 
 // Append read() to tcp.Connection
 //  
-var sys = require('sys');
+var util = require('util');
 var tcp = require("net");
 var events = require("events");
 var errors = require('./errors');
@@ -16,7 +16,7 @@ var Socket = function(connect_callback, close_callback) {
     this.connect_callback = connect_callback;
     this.close_callback = close_callback;
 }
-sys.inherits(Socket, events.EventEmitter);
+util.inherits(Socket, events.EventEmitter);
 exports.Socket = Socket;
 
 Socket.prototype.timeout = function(timeout) {

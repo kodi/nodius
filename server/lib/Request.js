@@ -1,5 +1,3 @@
-var sys = require('sys');
-
 var Request = function() {
     this.defaultAction = 'index';
     this.defaultController = 'home';
